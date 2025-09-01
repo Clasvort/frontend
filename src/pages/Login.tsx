@@ -13,10 +13,12 @@ export function Login(){
     e.preventDefault(); setError(null)
     try{
       const { data } = await api.post('/auth/login',{ email,password })
-      const payload = JSON.parse(atob(data.accessToken.split('.')[1]))
-      setAuth(data.accessToken, payload.role)
+      const payload = JSON.parse(atob(data.access_token.split('.')[1]))
+      setAuth(data.access_token, payload.role)
       navigate('/')
-    }catch(err:any){ setError(err?.response?.data?.message || 'Error login') }
+    }catch(err:any){ 
+      setError(err?.response?.data?.message || 'Error login') }
+
   }
   return (
     <div className='min-h-screen flex items-center justify-center bg-gray-50'>
@@ -26,7 +28,14 @@ export function Login(){
         <input className='w-full border p-2 rounded' type='password' placeholder='Password' value={password} onChange={e=>setPassword(e.target.value)} />
         {error && <p className='text-red-600 text-sm'>{error}</p>}
         <button className='w-full bg-black text-white p-2 rounded'>Entrar</button>
-        <p className='text-sm text-center'>¿No tienes cuenta? <Link to='/register' className='underline'>Regístrate</Link></p>
+        <div className='text-center space-y-2'>
+          <p className='text-sm'>
+            <Link to='/forgot-password' className='text-blue-600 hover:underline'>
+              ¿Olvidaste tu contraseña?
+            </Link>
+          </p>
+          <p className='text-sm'>¿No tienes cuenta? <Link to='/register' className='underline'>Regístrate</Link></p>
+        </div>
       </form>
     </div>)
 }
